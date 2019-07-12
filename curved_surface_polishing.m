@@ -31,7 +31,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Get mold points from a file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-B = importdata('/home/helio/catkin_ws/src/franka_ros/franka_polishing/mold_data/mold_points');
+B = importdata('/home/helio/catkin_ws/src/TOOLING4G/franka_polishing/mold_data/mold_points');
 % px py pz qw qx qy qz
 % mold position in Base frame
 Pmold = [B.data(:,1) B.data(:,2) B.data(:,3)]';
@@ -44,7 +44,7 @@ Rmold = quat2rotm(Qmold);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Get points of the mold work-space from a file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-P = importdata('/home/helio/catkin_ws/src/franka_ros/franka_polishing/mold_data/mold_workspace');
+P = importdata('/home/helio/catkin_ws/src/TOOLING4G/franka_polishing/mold_data/mold_workspace');
 P1 = P(1,:);
 P2 = P(2,:);
 P3 = P(3,:);
