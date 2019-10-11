@@ -65,7 +65,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Open file to write
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-filepath = "/home/helio/catkin_ws/src/franka_ros/franka_polishing/mold_data/mold_points";
+filepath = "/home/helio/catkin_ws/src/TOOLING4G/franka_polishing/mold_data/mold_points";
 fileID = fopen(filepath,'w');
 fprintf(fileID,'px py pz qw qx qy qz\n');
 
