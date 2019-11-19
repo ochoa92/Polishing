@@ -69,8 +69,8 @@ C = max(P); % max of the samples
 n = [0 0 1];
 d = -C(1)*n(1) - C(2)*n(2) - C(3)*n(3);
 
-x = linspace(min(P(:,1)), max(P(:,1)), 30);
-y = linspace(min(P(:,2)), max(P(:,2)), 15);
+x = linspace(min(P(:,1)), max(P(:,1)), 20);
+y = linspace(min(P(:,2)), max(P(:,2)), 10);
 [xx,yy] = meshgrid(x,y);
 zz = ((-d - (n(1)*xx) - (n(2)*yy))/n(3));
 

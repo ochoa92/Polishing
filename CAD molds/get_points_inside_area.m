@@ -1,4 +1,4 @@
-function points = get_points_inside_area(area, p)    
+function [p_inside, p_inside_index] = get_points_inside_area(area, p)    
     % Computes the points inside an area delimited by 4 points (P1,P2,P3,P4)
     %
     % INPUTS:
@@ -14,7 +14,7 @@ function points = get_points_inside_area(area, p)
     P3 = area(3,1:2);
     P4 = area(4,1:2);
     
-    % points vectors
+    % point vectors
     l12 = P2 - P1;
     l23 = P3 - P2;
     l34 = P4 - P3;
@@ -26,7 +26,8 @@ function points = get_points_inside_area(area, p)
     l3P = [];
     l4P = [];
     num_p = length(p);
-    points = [];
+    p_inside = [];
+    p_inside_index = [];
     for i=1:num_p
         p_ = p(i,1:2);
         l1P = p_ - P1;
@@ -41,7 +42,8 @@ function points = get_points_inside_area(area, p)
        signal4 = dot(l4P,l41);
 
        if signal1 >= 0.0 && signal2 >= 0.0 && signal3 >= 0.0 && signal4 >= 0.0
-           points = [points; p(i,:)];
+           p_inside = [p_inside; p(i,:)];
+           p_inside_index = [p_inside_index; i];
        end
     end
     
