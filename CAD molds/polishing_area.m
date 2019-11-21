@@ -1,129 +1,204 @@
 % =========================================================================
 % Project Name: TOOLING4G - Polishing
 % Author      : Hélio Ochoa
-% Description : import cad model to matlab and select the polishing target
-%               area ( px,py,pz ; ox,oy,oz )  
+% Description :         
 % =========================================================================
 
 clear all;
 clc;
 close all;
 
-%% IMPORT CAD TO MATLAB
-[F,V,N] = stlread('mold.stl');
+
+% Import an STL mesh, returning a PATCH-compatible face-vertex structure
+% fv = stlread('polishing_mold.stl');
+% patch(fv,'FaceColor',       [0.8 0.8 1.0], ...
+%          'EdgeColor',       'none',        ...
+%          'FaceLighting',    'gouraud',     ...
+%          'AmbientStrength', 0.15);
+[F,V,N] = stlread('polishing_mold.stl');
 
 % convert mm to m
 V = V*1e-3; % Vertices
 N = N*1e-3; % Face normal vectors
 
-[meshXYZ] = CONVERT_meshformat(F,V);
-X = meshXYZ(:,1,1);
-Y = meshXYZ(:,2,1);
-Z = meshXYZ(:,3,1);
-
-
 %% PLOT 1
-figure(1)
-hold on
+% figure(1)
+% hold on
+% 
+% patch('Faces',F, ...
+%       'Vertices',V, ...
+%       'FaceColor', [0.8 0.8 1.0], ...
+%       'EdgeColor', 'none', ...
+%       'FaceLighting',    'gouraud', ...
+%       'AmbientStrength', 0.15);
+% 
+% % Add a camera light, and tone down the specular highlighting
+% camlight('headlight');
+% material('metal');
+% 
+% axis equal
+% grid on
+% xlabel('X')
+% ylabel('Y')
+% zlabel('Z')
 
-patch('Faces',F, ...
-      'Vertices',V, ...
-      'FaceColor', [0.8 0.8 1.0], ...
-      'EdgeColor', 'none', ...
-      'FaceLighting',    'gouraud', ...
-      'AmbientStrength', 0.15);
-  
-% Add a camera light, and tone down the specular highlighting
-camlight('headlight');
-material('metal');
-
-axis equal
-grid on
-xlabel('X')
-ylabel('Y')
-zlabel('Z')
-
-
-% %% SELECT POLISHING AREA
-% input = ginput(4);
-% P = [input(:,1), input(:,2); input(1,:)];
-% plot(P(:,1), P(:,2), 'r')
-% area = [input(:,1), input(:,2)];
-% points = [X, Y, Z];
-% points_inside_area = get_points_inside_area(area, points);
-% X = points_inside_area(:,1);
-% Y = points_inside_area(:,2);
-% Z = points_inside_area(:,3);
-
-
-%% GET TRIANGLES AND INCENTERS
-TRI = delaunay(X,Y);
-TR = triangulation(TRI,X,Y,Z);
+%% PLOT 2
+TR = triangulation(F,V);
 IC = incenter(TR);
 FN = faceNormal(TR);
 
-%% MESHGRID
-P = [X Y Z]; % all positions 
-
-C = max(P); % max of the samples 
-n = [0 0 1];
-d = -C(1)*n(1) - C(2)*n(2) - C(3)*n(3);
-
-x = linspace(min(P(:,1)), max(P(:,1)), 20);
-y = linspace(min(P(:,2)), max(P(:,2)), 10);
-[xx,yy] = meshgrid(x,y);
-zz = ((-d - (n(1)*xx) - (n(2)*yy))/n(3));
-
-
-%% POINTS INSIDE MESHGRID AREAS
-c = length(x);
-l = length(y);
-
-points_inside = [];
-normals_inside = [];
-for i=1:l-1
-   for j=1:c-1
-       
-       area = [xx(i,j) yy(i,j); xx(i+1,j) yy(i+1,j); xx(i+1,j+1) yy(i+1,j+1); xx(i,j+1) yy(i,j+1)];
-       
-       points = get_points_inside_area(area, IC);
-       points_inside = [points_inside; mean(points,1)];
-       
-       normals = get_points_inside_area(area, FN);
-       normals_inside = [normals_inside; mean(normals,1)];
-       
-   end
-end
-
-
-%% PLOT 2
-figure(2)
+fh2 = figure(2);
+fh2.WindowState = 'maximized';
 hold on
-
-patch('Faces',F, ...
-      'Vertices',V, ...
-      'FaceColor', [0.8 0.8 1.0], ...
-      'EdgeColor', 'none', ...
-      'FaceLighting',    'gouraud', ...
-      'AmbientStrength', 0.15);
-  
-% Add a camera light, and tone down the specular highlighting
-camlight('headlight');
-material('metal');
-
-% trisurf(TRI,X,Y,Z);
-% trimesh(TRI,X,Y,Z);
-
-plot3(IC(:,1),IC(:,2),IC(:,3), '*b')
-
-mesh(xx,yy,zz, 'FaceColor', 'none');
-
-plot3(points_inside(:,1), points_inside(:,2), points_inside(:,3), '+r');
-% quiver3(points_inside(:,1),points_inside(:,2),points_inside(:,3), normals_inside(:,1),normals_inside(:,2),normals_inside(:,3), 0.5,'color','r');
+trisurf(TR)
+plot3(IC(:,1),IC(:,2),IC(:,3), '*r')
+quiver3(IC(:,1),IC(:,2),IC(:,3), FN(:,1),FN(:,2),FN(:,3),2,'color','r');
 
 axis equal
 grid on
 xlabel('X')
 ylabel('Y')
 zlabel('Z')
+
+% SELECT POLISHING AREA ---------------------------------------------------
+points_selected = 0;
+max_points_selected = 4;
+while points_selected < max_points_selected
+    points_selected = points_selected + 1;
+    [x(points_selected), y(points_selected), button] = ginput(1);  
+    plot(x(points_selected), y(points_selected), 'b+', 'MarkerSize', 15, 'linewidth', 2)
+    if button == 3
+        % Exit loop if
+        break;
+    end
+end
+
+area = [x', y'];
+points_connected = [area(:,1), area(:,2); area(1,:)];
+plot(points_connected(:,1), points_connected(:,2), 'b', 'linewidth', 2)
+
+p = IC;
+[p_inside, p_inside_index] = get_points_inside_area(area, p);
+
+FN_inside = [];
+for i=1:length(p_inside_index)
+    FN_inside = [FN_inside; FN(p_inside_index(i),:)];
+end
+
+% remove underside IN's and FN's ------------------------------------------
+polishing_IC = [];
+polishing_FN = [];
+for i=1:length(p_inside)
+    if (p_inside(i,3) > -0.07)
+        polishing_IC = [polishing_IC; p_inside(i,:)];
+        polishing_FN = [polishing_FN; FN_inside(i,:)];
+    end
+end
+
+% -------------------------------------------------------------------------
+plot3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), '*k')
+quiver3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), polishing_FN(:,1),polishing_FN(:,2),polishing_FN(:,3),2,'color','k');
+
+
+%% PLOT 3
+nx = [];
+ny = [];
+nz = [];
+for i=1:length(polishing_FN)
+    R = normal2Rotation(polishing_FN(i,:));
+    nx = [nx; R(:,1)'];
+    ny = [ny; R(:,2)'];
+    nz = [nz; R(:,3)'];
+end
+
+fh3 = figure(3);
+fh3.WindowState = 'maximized';
+hold on
+
+trisurf(TR)
+plot3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), '*r')
+quiver3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), nx(:,1),nx(:,2),nx(:,3),2,'color','r', 'linewidth', 2);
+quiver3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), ny(:,1),ny(:,2),ny(:,3),2,'color','g', 'linewidth', 2);
+quiver3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), nz(:,1),nz(:,2),nz(:,3),2,'color','b', 'linewidth', 2);
+
+axis equal
+grid on
+xlabel('X')
+ylabel('Y')
+zlabel('Z')
+
+
+%% PLOT 4
+% Get mold position and orientation from a file
+M = importdata('/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/plane_points');
+P1 = M(1,:);
+P2 = M(2,:);
+P3 = M(3,:);
+P4 = M(4,:);
+Mold = [P1; P2; P3; P4; P1];
+Rm = points2Rotation(P1', P2', P4'); % mold rotation
+
+Om = P1; % origem
+pm = [];
+for i=1:length(polishing_IC)    
+    pm = [pm; (Rm * polishing_IC(i,:)')' + Om];
+end
+
+% Get pattern from a file
+A = importdata('/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/pattern');
+% t p_x p_y p_z Qx Qy Qz Qw Fx_EE Fy_EE Fz_EE Fx_O Fy_O Fz_O
+
+% pattern position in Base frame
+Ppattern = [A.data(:,2) A.data(:,3) A.data(:,4)]';  % p = [px py pz]';
+
+% pattern orientation in Base frame
+Qpattern = [A.data(:,8) A.data(:,5) A.data(:,6) A.data(:,7)];   % Q = [qw qx qy qz];
+Rpattern = quat2rotm(Qpattern);
+
+% pattern offsets
+offset = zeros(size(Ppattern,1));
+for k = 1:(size(Ppattern,2)-1)
+   offset(:,k) = Ppattern(:,k+1) - Ppattern(:,k);
+end
+
+n_points = length(pm);
+for n = 1:10
+    pd(:,1) = pm(n,:)';
+    Rp = [nx(n,:)' ny(n,:)' nz(n,:)'];
+    for k = 1:size(offset,2)
+       pd(:,k+1) = pd(:,k) + Rp*offset(:,k);
+    end
+
+    fh4 = figure(4);
+    fh4.WindowState = 'maximized';
+    hold on
+
+    % mold
+    plot3(Mold(:,1), Mold(:,2), Mold(:,3), '--b', 'linewidth', 2)
+
+    % points
+    plot3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), '*r')
+    plot3(pm(:,1),pm(:,2),pm(:,3), '*g','linewidth', 2)
+
+    % mold axis
+    quiver3(P1(1),P1(2),P1(3), Rm(1,1),Rm(2,1),Rm(3,1),0.2,'color','r', 'linewidth', 2);
+    quiver3(P1(1),P1(2),P1(3), Rm(1,2),Rm(2,2),Rm(3,2),0.2,'color','g', 'linewidth', 2);
+    quiver3(P1(1),P1(2),P1(3), Rm(1,3),Rm(2,3),Rm(3,3),0.2,'color','b', 'linewidth', 2);
+
+    % points on mold axis
+    quiver3(pm(:,1),pm(:,2),pm(:,3), nx(:,1),nx(:,2),nx(:,3),2,'color','r', 'linewidth', 2);
+    quiver3(pm(:,1),pm(:,2),pm(:,3), ny(:,1),ny(:,2),ny(:,3),2,'color','g', 'linewidth', 2);
+    quiver3(pm(:,1),pm(:,2),pm(:,3), nz(:,1),nz(:,2),nz(:,3),2,'color','b', 'linewidth', 2);
+    
+    % pattern on mold axis 
+    plot3(pd(1,:), pd(2,:), pd(3,:), '.k')
+    
+    axis equal
+    grid on
+    xlabel('X')
+    ylabel('Y')
+    zlabel('Z')
+
+end
+
 
