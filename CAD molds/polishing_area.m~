@@ -138,19 +138,16 @@ P4 = M(4,:);
 Mold = [P1; P2; P3; P4; P1];
 Rm = points2Rotation(P1', P2', P4'); % mold rotation
 
-% polishing area projection 
 Om = P1; % origem
 pm = [];
 for i=1:length(polishing_IC)    
     pm = [pm; (Rm * polishing_IC(i,:)')' + Om];   
 end
 
-% mold projection
 Vm = [];
 for i=1:length(V)
     Vm = [Vm; (Rm * V(i,:)')' + Om];
 end
-TRm = triangulation(F,Vm);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Open file to write
@@ -199,23 +196,9 @@ for n = 1:1
     fh4.WindowState = 'maximized';
     hold on
 
-    % mold work-space
+    % mold
     plot3(Mold(:,1), Mold(:,2), Mold(:,3), '--b', 'linewidth', 2)
-    
-    % mold mesh
-    trisurf(TRm)
-%     patch('Faces',F, ...
-%           'Vertices',Vm, ...
-%           'FaceColor', [0.8 0.8 1.0], ...
-%           'EdgeColor', 'none', ...
-%           'FaceLighting',    'gouraud', ...
-%           'AmbientStrength', 0.15);
-% 
-%     % Add a camera light, and tone down the specular highlighting
-%     camlight('headlight');
-%     material('metal');
-    
-    
+
     % points
     plot3(polishing_IC(:,1),polishing_IC(:,2),polishing_IC(:,3), '*r')
     plot3(pm(:,1),pm(:,2),pm(:,3), '*g','linewidth', 2)

@@ -11,7 +11,7 @@ function [R] = normal2Rotation(normal)
     nz = normal;
     nz = nz/norm(nz);
     
-    nx = [1 0 0];
+    nx = [-1 0 0];
     nx = nx/norm(nx);
        
     ny = cross(nz,nx);
