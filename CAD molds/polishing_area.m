@@ -10,16 +10,14 @@ close all;
 
 
 % Import an STL mesh, returning a PATCH-compatible face-vertex structure
-% fv = stlread('polishing_mold.stl');
-% patch(fv,'FaceColor',       [0.8 0.8 1.0], ...
-%          'EdgeColor',       'none',        ...
-%          'FaceLighting',    'gouraud',     ...
-%          'AmbientStrength', 0.15);
-[F,V,N] = stlread('polishing_mold.stl');
+[F,V,N] = stlread('polishing_mold2.stl');
 
 % convert mm to m
-V = V*1e-3; % Vertices
-N = N*1e-3; % Face normal vectors
+% V = V*1e-3; % Vertices
+% N = N*1e-3; % Face normal vectors
+V = V*1e-4; % Vertices
+N = N*1e-4; % Face normal vectors
+
 
 %% PLOT 1
 % figure(1)
