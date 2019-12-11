@@ -1,7 +1,10 @@
 % =========================================================================
 % Project Name: TOOLING4G - Polishing
 % Author      : Hélio Ochoa
-% Description :         
+% Description : Import a stl mesh and build a triangulation with this mesh. 
+%               Then a polishing area is selected, where the starting
+%               points and normals are identified. Finally, the
+%               selected data is projected to robot base frame.
 % =========================================================================
 
 clear all;
@@ -156,7 +159,7 @@ filepath = "/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation
 fileID = fopen(filepath,'w');
 fprintf(fileID,'px py pz qw qx qy qz\n');
 
-delta_synthetic = [0.0, 0.0, -0.002];
+delta_synthetic = [0.0, 0.0, -0.005];
 for i=1:length(pm)
     position = pm(i,:) + delta_synthetic;
     Rotation = [nx(i,:)' ny(i,:)' nz(i,:)'];
