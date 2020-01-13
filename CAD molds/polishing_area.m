@@ -14,13 +14,11 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Import an STL mesh, returning a PATCH-compatible face-vertex structure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[F,V,N] = stlread('polishing_mold2.stl');
+[F,V,N] = stlread('polishing_mold.stl');
 
 % convert mm to m
-% V = V*1e-3; % Vertices
-% N = N*1e-3; % Face normal vectors
-V = V*1e-4; % Vertices
-N = N*1e-4; % Face normal vectors
+% V = V*1e-4; % Vertices
+% N = N*1e-4; % Face normal vectors
 
 %% PLOT 1
 TR = triangulation(F,V);
@@ -159,7 +157,8 @@ filepath = "/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation
 fileID = fopen(filepath,'w');
 fprintf(fileID,'px py pz qw qx qy qz\n');
 
-delta_synthetic = [0.0, 0.0, -0.005];
+% delta_synthetic = [0.0, 0.0, -0.005];
+delta_synthetic = [0.0, 0.0, 0.0];
 for i=1:length(pm)
     position = pm(i,:) + delta_synthetic;
     Rotation = [nx(i,:)' ny(i,:)' nz(i,:)'];

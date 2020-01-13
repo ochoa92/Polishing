@@ -62,3 +62,9 @@ T = [1 0 0 px;
 
  P_T_EE = T*Tz*Ty;
  
+ % Rotation Matrix from Flange(panda_link8) to End-Effector
+ p_8EE = P_T_EE(1:3,end);
+ R_8EE = tform2rotm(P_T_EE);
+ RPY = rotm2eul(R_8EE, 'ZYX');
+ Q = rotm2quat(R_8EE);
+ 
