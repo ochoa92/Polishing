@@ -29,8 +29,8 @@ I = [Ix 0 0;
      0 0 Iz];   
 
 % Transformation Matrix from Flange(panda_link8) to End-Effector
-delta_z = 0.115; %m
-delta_x = 0.065;  %m 
+delta_z = 0.12; %m  0.115
+delta_x = 0.057;  %m 0.065
 
 % h² = x² + y² -> (x = y): angle between panda_link8 and buttons is -45 degrees
 
