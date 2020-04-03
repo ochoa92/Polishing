@@ -104,7 +104,7 @@ zlabel('Z')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Get mold pose from a file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-M = importdata('/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/mold_workspace');
+M = importdata('/home/ochoa/franka_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/mold_workspace');
 P1 = M(1,:);
 P2 = M(2,:);
 P3 = M(3,:);
@@ -140,7 +140,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Save polygon vertices in a file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-filepath = "/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/polygon_vertices";
+filepath = "/home/ochoa/franka_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/polygon_vertices";
 fileID = fopen(filepath,'w');
 fprintf(fileID,'Vx Vy\n');
 for i=1:length(polygon_vertices_m)
@@ -153,7 +153,7 @@ fclose(fileID); % close file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Save the polishing area in a file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-filepath = "/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/polishing_area";
+filepath = "/home/ochoa/franka_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/polishing_area";
 fileID = fopen(filepath,'w');
 fprintf(fileID,'px py pz qw qx qy qz\n');
 
@@ -172,7 +172,7 @@ fclose(fileID); % close file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Get polishing pattern from a file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-A = importdata('/home/panda/catkin_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/pattern');
+A = importdata('/home/ochoa/franka_ws/src/TOOLING4G/franka_polishing/co_manipulation_data/pattern');
 % t p_x p_y p_z Qx Qy Qz Qw Fx_EE Fy_EE Fz_EE Fx_O Fy_O Fz_O
 
 % pattern position in Base frame
