@@ -8,15 +8,22 @@ clc
 close all
 
 %% position
-% P = importdata('co_manipulation_results/position_pattern');
-% % t p_x p_y p_z Qx Qy Qz Qw
-% 
-% t_pattern = P.data(:,1);
-% px_pattern = P.data(:,2);
-% py_pattern = P.data(:,3);
-% pz_pattern = P.data(:,4);
-% 
-% % plot
+P = importdata('co_manipulation_results/position_pattern');
+% t p_x p_y p_z Qx Qy Qz Qw
+
+t_pattern = P.data(:,1);
+px_pattern = P.data(:,2);
+py_pattern = P.data(:,3);
+pz_pattern = P.data(:,4);
+p = [px_pattern py_pattern pz_pattern];
+
+Q = [P.data(:,8) P.data(:,5) P.data(:,6) P.data(:,7)];
+R = quat2rotm(Q);
+for i=1:length(R)
+   pEE = R(:,:,i)' *  p'; 
+end
+
+%% plot base-frame
 % figure(1)
 % hold on
 % plot(t_pattern, px_pattern, 'r', 'linewidth', 2)
@@ -40,6 +47,37 @@ close all
 % figure(3)
 % hold on
 % plot(t_pattern, pz_pattern, 'b', 'linewidth', 2)
+% grid on
+% xlabel('t (s)', 'FontSize', 40)
+% ylabel('p_z (m)', 'FontSize', 40)
+% xlim([t_pattern(1) t_pattern(end)])
+% set(gca,'FontSize',40)
+% box on
+
+%%
+% figure(1)
+% hold on
+% plot(t_pattern, pEE(1,:), 'r', 'linewidth', 2)
+% grid on
+% xlabel('t (s)', 'FontSize', 40)
+% ylabel('p_x (m)', 'FontSize', 40)
+% xlim([t_pattern(1) t_pattern(end)])
+% set(gca,'FontSize',40)
+% box on
+% 
+% figure(2)
+% hold on
+% plot(t_pattern, pEE(2,:), 'g', 'linewidth', 2)
+% grid on
+% xlabel('t (s)', 'FontSize', 40)
+% ylabel('p_y (m)', 'FontSize', 40)
+% xlim([t_pattern(1) t_pattern(end)])
+% set(gca,'FontSize',40)
+% box on
+% 
+% figure(3)
+% hold on
+% plot(t_pattern, pEE(3,:), 'b', 'linewidth', 2)
 % grid on
 % xlabel('t (s)', 'FontSize', 40)
 % ylabel('p_z (m)', 'FontSize', 40)
